@@ -1,0 +1,16 @@
+<div class="heatmap" [style.gap.px]="gap">
+  @for (week of weeks(); track $index) {
+    <div class="col" [style.gap.px]="gap">
+      @for (day of week; track day.date) {
+        <div
+          class="cell"
+          [style.width.px]="cellSize"
+          [style.height.px]="cellSize"
+          [attr.data-level]="level(day.contributionCount)"
+          [class.dim]="highlightMonth && !isHighlighted(day.date)"
+          [style.animation-delay.ms]="$index * 10"
+        ></div>
+      }
+    </div>
+  }
+</div>

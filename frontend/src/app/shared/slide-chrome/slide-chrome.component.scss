@@ -1,0 +1,44 @@
+:host {
+  display: block;
+}
+
+.chrome {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  letter-spacing: 0.02em;
+}
+
+.dots {
+  display: flex;
+  gap: 0.3rem;
+  margin-right: 0.35rem;
+
+  span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+}
+
+.crumb {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 40vw;
+}
+
+.sep {
+  opacity: 0.5;
+  font-size: 0.6rem;
+}

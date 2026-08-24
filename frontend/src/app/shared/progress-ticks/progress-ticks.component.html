@@ -1,0 +1,12 @@
+<div class="ticks">
+  @for (i of indices(); track i) {
+    <div class="tick">
+      <div
+        class="tick-fill"
+        [class.done]="stateFor(i) === 'done'"
+        [class.active]="stateFor(i) === 'active' && !paused"
+        [style.animation-duration.ms]="durationMs"
+      ></div>
+    </div>
+  }
+</div>

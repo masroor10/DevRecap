@@ -1,0 +1,122 @@
+@if (loading()) {
+  <div class="status-screen">
+    <div class="spinner"></div>
+    <p class="mono">{{ loadingMessages[loadingIndex()] }}</p>
+  </div>
+} @else if (error()) {
+  <div class="status-screen">
+    <p class="mono error">// {{ error() }}</p>
+    <a routerLink="/">← try another username</a>
+  </div>
+} @else {
+  <div
+    #stageEl
+    class="stage"
+    [attr.data-accent]="currentSlide().accent"
+    (pointerdown)="togglePause(true)"
+    (pointerup)="togglePause(false)"
+  >
+    <div class="glow"></div>
+    <div class="vignette"></div>
+    @if (currentSlide().kind === 'outro') {
+      <app-confetti></app-confetti>
+    }
+
+    <div class="chrome-bar">
+      <app-slide-chrome
+        [crumbs]="['devrecap', '@' + username, recap()!.year.toString()]"
+        [count]="slides().length"
+        [currentIndex]="currentIndex()"
+        [paused]="paused()"
+        [durationMs]="slideDurationMs"
+      ></app-slide-chrome>
+    </div>
+
+    <button class="close" (click)="goHome()" aria-label="Close">✕</button>
+
+    <div class="tap-zone left" (click)="prev()" aria-hidden="true">
+      <span class="chevron">‹</span>
+    </div>
+    <div class="tap-zone right" (click)="next()" aria-hidden="true">
+      <span class="chevron">›</span>
+    </div>
+
+    @if (showHint()) {
+      <div class="hint-pill">tap or press ← → to move between slides</div>
+    }
+
+    @for (slide of [currentSlide()]; track currentIndex()) {
+      <div class="slide-body" [class.dir-back]="direction() === 'back'" [class.exiting]="exiting()">
+        @if (slide.kind === 'intro') {
+          @if (recap()!.avatarUrl) {
+            <img class="avatar" [src]="recap()!.avatarUrl" [alt]="username" />
+          } @else {
+            <div class="avatar monogram">{{ (username || '?').charAt(0).toUpperCase() }}</div>
+          }
+        } @else {
+          <div class="icon-badge">
+            <app-icon [name]="slide.icon" [size]="26"></app-icon>
+          </div>
+        }
+
+        <p class="kicker">// {{ slide.kicker }}</p>
+
+        @switch (slide.kind) {
+          @case ('heatmap') {
+            <h1 class="headline">{{ slide.headline }}</h1>
+            <div class="heatmap-wrap">
+              <app-heatmap-grid
+                [days]="recap()!.heatmap"
+                [highlightMonth]="busiestMonthKey()"
+              ></app-heatmap-grid>
+            </div>
+          }
+          @case ('compare') {
+            <h1 class="headline" [class.diff]="slide.percent! >= 0" [class.down]="slide.percent! < 0">
+              {{ slide.headline }}
+            </h1>
+            @if (slide.detail) {
+              <p class="detail">{{ slide.detail }}</p>
+            }
+          }
+          @case ('outro') {
+            <div class="outro-ring"></div>
+            <h1 class="headline">{{ slide.headline }}</h1>
+            <p class="detail">screenshot this recap, or send the image.</p>
+
+            <div class="share-preview" #shareCardEl>
+              <app-share-card [recap]="recap()!" [username]="username"></app-share-card>
+            </div>
+
+            <div class="outro-actions">
+              <button class="run-btn" [disabled]="exporting()" (click)="downloadImage()">
+                <app-icon name="download" [size]="14"></app-icon>
+                {{ exporting() ? 'preparing…' : 'download image' }}
+              </button>
+              <button class="ghost-btn" [disabled]="exporting()" (click)="share()">
+                <app-icon name="share" [size]="14"></app-icon>
+                share
+              </button>
+              <a class="restart" routerLink="/">look up another profile</a>
+            </div>
+          }
+          @default {
+            @if (slide.diff && slide.numericValue !== undefined) {
+              <h1 class="headline diff">
+                <span class="sign">+</span><app-count-up [value]="slide.numericValue"></app-count-up>
+                @if (slide.unit) {
+                  <span class="unit">{{ slide.unit }}</span>
+                }
+              </h1>
+            } @else {
+              <h1 class="headline">{{ slide.headline }}</h1>
+            }
+            @if (slide.detail) {
+              <p class="detail">{{ slide.detail }}</p>
+            }
+          }
+        }
+      </div>
+    }
+  </div>
+}

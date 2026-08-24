@@ -1,0 +1,14 @@
+<div class="window" [class.tint-add]="tint === 'add'" [class.tint-violet]="tint === 'violet'">
+  <div class="titlebar">
+    <div class="dots">
+      <span></span><span></span><span></span>
+    </div>
+    <span class="title">{{ titleText }}</span>
+  </div>
+  <div class="body">
+    <ng-content></ng-content>
+  </div>
+  <div class="footer">
+    <ng-content select="[footer]"></ng-content>
+  </div>
+</div>

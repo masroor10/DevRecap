@@ -1,0 +1,68 @@
+<div class="home">
+  <div class="grid-overlay"></div>
+  <div class="glow"></div>
+
+  <div class="float-layer" aria-hidden="true">
+    @for (token of floatTokens; track token; let i = $index) {
+      <span class="float-token" [style]="tokenStyle(i)">{{ token }}</span>
+    }
+  </div>
+
+  <div class="content">
+    <p class="wordmark"><span class="dim">git</span>hub<span class="cursor-block">▌</span> wrapped</p>
+
+    <app-terminal-window titleText="bash — devrecap" tint="add">
+      <div class="terminal-lines">
+        @for (line of lines(); track $index) {
+          <p class="line" [class.out]="line.kind === 'out'">
+            @if (line.kind === 'cmd') {
+              <span class="prefix">$</span>
+            }
+            {{ line.text }}
+          </p>
+        }
+
+        @if (!bootDone()) {
+          <p class="line active">
+            <span class="prefix">$</span>
+            <app-typewriter
+              [text]="bootLines[stepIndex()].text"
+              [speedMs]="22"
+              (done)="onBootCmdTyped()"
+            ></app-typewriter>
+          </p>
+        } @else {
+          <form class="line active" (ngSubmit)="submit()">
+            <span class="prefix">$</span>
+            <app-typewriter [text]="finalPrompt" [speedMs]="26" (done)="onFinalTyped()"></app-typewriter>
+            @if (promptReady()) {
+              <span class="inline-input">
+                <span class="caret">&#64;</span>
+                <input
+                  #usernameInput
+                  type="text"
+                  placeholder="octocat"
+                  [ngModel]="username()"
+                  (ngModelChange)="username.set($event)"
+                  name="username"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <span class="hint-key">Enter ↵</span>
+              </span>
+            }
+          </form>
+        }
+      </div>
+
+      <div footer class="footer-row">
+        <button class="run-btn" (click)="submit()">
+          <span class="prompt-glyph">$</span> Run recap
+        </button>
+        <button class="demo-btn" type="button" (click)="tryDemo()">try a demo</button>
+      </div>
+    </app-terminal-window>
+
+    <p class="tagline">// turns any public GitHub profile into a shareable year-in-review</p>
+  </div>
+</div>

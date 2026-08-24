@@ -1,0 +1,43 @@
+:host {
+  display: block;
+}
+
+.ticks {
+  display: flex;
+  gap: 4px;
+}
+
+.tick {
+  flex: 1;
+  height: 4px;
+  border-radius: 1px;
+  background: rgba(230, 237, 243, 0.12);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+
+  &:has(.tick-fill.active) {
+    box-shadow: 0 0 6px var(--diff-add);
+  }
+}
+
+.tick-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--diff-add);
+  border-radius: 1px;
+
+  &.done {
+    width: 100%;
+  }
+
+  &.active {
+    animation-name: fill;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+}
+
+@keyframes fill {
+  from { width: 0%; }
+  to { width: 100%; }
+}

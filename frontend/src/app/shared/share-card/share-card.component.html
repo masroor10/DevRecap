@@ -1,0 +1,60 @@
+<div class="card">
+  <div class="card-header">
+    <span class="wordmark"><span class="dim">git</span>hub wrapped</span>
+    <span class="year-pill">{{ recap.year }}</span>
+  </div>
+
+  <div class="identity">
+    @if (recap.avatarUrl) {
+      <img class="avatar" [src]="recap.avatarUrl" [alt]="username" crossorigin="anonymous" />
+    } @else {
+      <div class="avatar monogram">{{ initial() }}</div>
+    }
+    <div class="identity-text">
+      <p class="handle">&#64;{{ username }}</p>
+      @if (growthPercent() !== null) {
+        <p class="growth" [class.down]="growthPercent()! < 0">
+          <app-icon name="trend" [size]="13"></app-icon>
+          {{ growthPercent()! >= 0 ? '+' : '' }}{{ growthPercent() }}% vs {{ recap.year - 1 }}
+        </p>
+      }
+    </div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="tile hero">
+      <app-icon name="commit" [size]="16"></app-icon>
+      <p class="tile-value diff">+{{ recap.totalContributions.toLocaleString() }}</p>
+      <p class="tile-label">contributions</p>
+    </div>
+    <div class="tile hero">
+      <app-icon name="flame" [size]="16"></app-icon>
+      <p class="tile-value diff">{{ recap.longestStreak }}d</p>
+      <p class="tile-label">longest streak</p>
+    </div>
+    @if (recap.topLanguage) {
+      <div class="tile">
+        <app-icon name="code" [size]="14"></app-icon>
+        <p class="tile-value">{{ recap.topLanguage }}</p>
+        <p class="tile-label">top language</p>
+      </div>
+    }
+    @if (recap.mostStarredRepo) {
+      <div class="tile">
+        <app-icon name="star" [size]="14"></app-icon>
+        <p class="tile-value">{{ recap.mostStarredRepo.name }}</p>
+        <p class="tile-label">{{ recap.mostStarredRepo.stars }} stars</p>
+      </div>
+    }
+  </div>
+
+  <div class="heatmap-strip">
+    <app-heatmap-grid [days]="recap.heatmap" [cellSize]="4" [gap]="1"></app-heatmap-grid>
+  </div>
+
+  <div class="card-footer">
+    <span>devrecap</span>
+    <span class="dot">·</span>
+    <span>your year, wrapped</span>
+  </div>
+</div>
